@@ -11,5 +11,14 @@ CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  user_id VARCHAR(255) NOT NULL
+  user_id VARCHAR(255) NOT NULL,
+);
+
+ALTER TABLE posts ADD created_at TIMESTAMP DEFAULT NOW();
+
+CREATE TABLE photos (
+  id SERIAL PRIMARY KEY,
+  url TEXT NOT NULL,
+  post_id INTEGER NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts(id)
 );

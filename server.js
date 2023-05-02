@@ -97,22 +97,57 @@ app.get('/users/:id', async(req, res) => {
 
 // get post
 app.get('/posts', authenticateToken, async(req, res) => {
-    const posts = await pool.query('SELECT id, title, description, img_src FROM posts WHERE user_id = $1', [req.user])
-    res.json(posts.rows)
+    const posts = await pool.query('SELECT id, title, description, created_at FROM posts WHERE user_id = $1', [req.user]);
+    let p = posts.rows;
+    p.forEach(element => {
+        postTime = new Date(element.created_at);
+        diff = Date.now() - postTime.getTime();
+
+        element.created_at = calculateDifference(diff);
+    });
+
+    res.json(p)
 
 })
+
+function calculateDifference(diff){
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) {
+        return seconds + "s ago";
+    } else if (minutes < 60) {
+        return minutes + "m ago";
+    } else if (hours < 24) {
+        return hours + "h ago";
+    } else if (days < 7) {
+        return days + "d ago";
+    } else if (weeks < 4) {
+        return weeks + "w ago";
+    } else if (months < 12) {
+        return months + "mo ago";
+    } else {
+        return years + "yr ago";
+    }
+}
 
 // create post
 app.post('/posts', authenticateToken, async(req, res) => {
     try {
         const post = await pool.query(
-            'INSERT INTO posts(title, description, img_src, user_id) VALUES(($1), ($2), ($3), ($4)) RETURNING *', 
-            [req.body.title, req.body.description, req.body.img_src, req.user]);
-        res.json(post.rows);
+            'INSERT INTO posts(title, description, user_id, created_at) VALUES(($1), ($2), ($3), NOW()) RETURNING *', 
+            [req.body.title, req.body.description, req.user]);
+        const photo = await pool.query('INSERT INTO photos(url, post_id) VALUES(($1), ($2))', [req.body.url, post.rows[0].id]);
+        res.json(post.rows[0]);
     } catch (error) {
         console.error(error);
     }
-})
+});
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];

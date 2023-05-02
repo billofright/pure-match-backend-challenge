@@ -17,7 +17,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdDJAZ21haWwuY29t.ZVre10GQptBX0AYP
 Content-Type: application/json
 
 {
-    "title": "post number 1",
-    "description": "this is a post",
-    "img_src": "image.com"
+    "title": "post number 3",
+    "description": "this is a post the third one",
+    "url": "imagethree.com"
 }
+
