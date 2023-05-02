@@ -1,0 +1,23 @@
+GET http://localhost:8008/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdDJAZ21haWwuY29t.ZVre10GQptBX0AYP7e_YsJJg11Arrt5aKBos1DmCyQo
+
+
+###
+POST http://localhost:8008/login
+Content-Type: application/json
+
+{
+    "email": "test2@gmail.com",
+    "password": "abc123"
+}
+
+###
+POST http://localhost:8008/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdDJAZ21haWwuY29t.ZVre10GQptBX0AYP7e_YsJJg11Arrt5aKBos1DmCyQo
+Content-Type: application/json
+
+{
+    "title": "post number 1",
+    "description": "this is a post",
+    "img_src": "image.com"
+}
