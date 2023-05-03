@@ -1,24 +1,55 @@
-GET http://localhost:8008/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdDJAZ21haWwuY29t.ZVre10GQptBX0AYP7e_YsJJg11Arrt5aKBos1DmCyQo
+POST http://localhost:8008/register
+Content-Type: application/json
+
+{
+    "name": "bill",
+    "email": "bill@gmail.com",
+    "password": "123abc"
+}
 
 
 ###
+
 POST http://localhost:8008/login
 Content-Type: application/json
 
 {
-    "email": "test2@gmail.com",
-    "password": "abc123"
+    "email": "bill@gmail.com",
+    "password": "123abc"
 }
+
+
+###
+
+GET http://localhost:8008/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.YmlsbEBnbWFpbC5jb20.zAKrxkilSaW8ZjtLNP0w89S1Kv_AbF6zeIwW9pGr6UY
+
 
 ###
 POST http://localhost:8008/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.dGVzdDJAZ21haWwuY29t.ZVre10GQptBX0AYP7e_YsJJg11Arrt5aKBos1DmCyQo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.YmlsbEBnbWFpbC5jb20.zAKrxkilSaW8ZjtLNP0w89S1Kv_AbF6zeIwW9pGr6UY
 Content-Type: application/json
 
 {
-    "title": "post number 3",
-    "description": "this is a post the third one",
-    "url": "imagethree.com"
+    "title": "post number 4",
+    "description": "this is a post the fourth one",
+    "photos": [
+        {
+            "url": "image1.com"
+        },
+        {
+            "url": "image2.com"
+        },
+        {
+            "url": "image3.com"
+        },
+        {
+            "url": "image4.com"
+        },
+        {
+            "url": "image5.com"
+        }
+    ]
 }
+
 

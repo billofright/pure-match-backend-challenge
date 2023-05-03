@@ -99,16 +99,16 @@ app.get('/users/:id', async(req, res) => {
 app.get('/posts', authenticateToken, async(req, res) => {
     const posts = await pool.query('SELECT id, title, description, created_at FROM posts WHERE user_id = $1', [req.user]);
     let p = posts.rows;
-    p.forEach(element => {
+    for(let element of p){
+        const photos = await pool.query('SELECT id, url FROM photos WHERE post_id = $1', [element.id]);
+        element.photos = photos.rows;
+
         postTime = new Date(element.created_at);
         diff = Date.now() - postTime.getTime();
-
         element.created_at = calculateDifference(diff);
-    });
-
-    res.json(p)
-
-})
+    };  
+    res.json(p);
+});
 
 function calculateDifference(diff){
     const seconds = Math.floor(diff / 1000);
@@ -142,7 +142,13 @@ app.post('/posts', authenticateToken, async(req, res) => {
         const post = await pool.query(
             'INSERT INTO posts(title, description, user_id, created_at) VALUES(($1), ($2), ($3), NOW()) RETURNING *', 
             [req.body.title, req.body.description, req.user]);
-        const photo = await pool.query('INSERT INTO photos(url, post_id) VALUES(($1), ($2))', [req.body.url, post.rows[0].id]);
+        if(req.body.photos.length > 5){
+            console.error('Maximum 5 photos');
+        } else {
+            for(let element of req.body.photos){
+                await pool.query('INSERT INTO photos(url, post_id) VALUES(($1), ($2))', [element.url, post.rows[0].id]);
+            }
+        }
         res.json(post.rows[0]);
     } catch (error) {
         console.error(error);
