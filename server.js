@@ -155,6 +155,17 @@ app.post('/posts', authenticateToken, async(req, res) => {
     }
 });
 
+// edit post
+app.post('/posts/edit', async(req, res) => {
+    // const {id} = req.params;
+    const post = await pool.query(
+        'UPDATE posts SET title = $1, description = $2 WHERE id = $3 RETURNING *', 
+        [req.body.title, req.body.description, req.body.id]);
+    
+    res.json(post.rows[0]);
+
+});
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -164,9 +175,10 @@ function authenticateToken(req, res, next) {
         if(err) return res.sendStatus(403);
         req.user = user;
         next();
-    })
+    });
 
 }
+
 
 app.listen(8008, () => {
     console.log('server has started on port 8008');
