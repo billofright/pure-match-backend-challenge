@@ -21,12 +21,19 @@ registerValidation,
 validationMiddelware,
 async(req, res) => {
     try {
-        const {name, email, password} = req.body;
+        const name = req.body.name;
+        const email = req.body.email;
+        const password = req.body.password;
         const hashedPassword = await bcrypt.hash(password, 10);
+        let username = null;
+        try {
+            username = req.body.username;
+
+        } catch (error) {}
 
         const newUser = await pool.query(
-            'INSERT INTO users(name, email, password) VALUES(($1), ($2), ($3)) RETURNING *', 
-            [name, email, hashedPassword]
+            'INSERT INTO users(name, email, password, username) VALUES(($1), ($2), ($3), ($4)) RETURNING *', 
+            [name, email, hashedPassword, username]
         );
 
         res.json(newUser.rows[0]);
@@ -95,9 +102,9 @@ app.get('/users/:id', async(req, res) => {
     }
 })
 
-// get post
-app.get('/posts', authenticateToken, async(req, res) => {
-    const posts = await pool.query('SELECT id, title, description, created_at FROM posts WHERE user_id = $1', [req.user]);
+// get post pagination, request gives current post id and number of next posts
+app.get('/posts', async(req, res) => {
+    const posts = await pool.query('SELECT * FROM posts WHERE id <= $1 ORDER BY created_at DESC LIMIT $2', [req.body.current_post_id, req.body.get_next]);
     let p = posts.rows;
     for(let element of p){
         const photos = await pool.query('SELECT id, url FROM photos WHERE post_id = $1', [element.id]);
@@ -156,14 +163,22 @@ app.post('/posts', authenticateToken, async(req, res) => {
 });
 
 // edit post
-app.post('/posts/edit', async(req, res) => {
-    // const {id} = req.params;
+app.post('/posts/edit', authenticateToken, async(req, res) => {
     const post = await pool.query(
         'UPDATE posts SET title = $1, description = $2 WHERE id = $3 RETURNING *', 
-        [req.body.title, req.body.description, req.body.id]);
+        [req.body.title, req.body.description, req.body.post_id]);
     
     res.json(post.rows[0]);
 
+});
+
+// comment on post
+app.post('/posts/comment', authenticateToken, async(req, res) => {
+    const comment = await pool.query(
+        'INSERT INTO comments(content, post_id, user_email) VALUES(($1), ($2), ($3)) RETURNING *', 
+        [req.body.content, req.body.post_id, req.user]);
+    
+    res.json(comment.rows[0]);
 });
 
 function authenticateToken(req, res, next) {

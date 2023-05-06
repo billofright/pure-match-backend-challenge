@@ -27,7 +27,9 @@ CREATE TABLE comments (
   id SERIAL PRIMARY KEY,
   content TEXT NOT NULL,
   post_id INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
+  user_email VARCHAR(255) NOT NULL,
   FOREIGN KEY (post_id) REFERENCES posts(id),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_email) REFERENCES users(email)
 );
+
+ALTER TABLE users ADD username VARCHAR(255); 
