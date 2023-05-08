@@ -2,8 +2,8 @@ POST http://localhost:8008/register
 Content-Type: application/json
 
 {
-    "name": "william2",
-    "email": "willia2m@gmail.com",
+    "name": "william",
+    "email": "william@gmail.com",
     "password": "1234abcd"
 }
 
@@ -14,8 +14,8 @@ POST http://localhost:8008/login
 Content-Type: application/json
 
 {
-    "email": "bill@gmail.com",
-    "password": "123abc"
+    "email": "william@gmail.com",
+    "password": "1234abcd"
 }
 
 
@@ -29,15 +29,19 @@ Content-Type: application/json
     "get_next": 4
 }
 
+###
+
+GET http://localhost:8008/users
+
 
 ###
 POST http://localhost:8008/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.YmlsbEBnbWFpbC5jb20.zAKrxkilSaW8ZjtLNP0w89S1Kv_AbF6zeIwW9pGr6UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.d2lsbGlhbUBnbWFpbC5jb20.VMw5SIK60WjDP2Ta74D9syCL22YSP-L80KbV-6JdXNE
 Content-Type: application/json
 
 {
-    "title": "post number 4",
-    "description": "this is a post the fourth one",
+    "title": "post number 2",
+    "description": "this is a post the first one",
     "photos": [
         {
             "url": "image1.com"
@@ -64,19 +68,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.YmlsbEBnbWFpbC5jb20.zAKrxkilSaW8ZjtLN
 Content-Type: application/json
 
 {
-    "title": "post number 4 edited",
-    "description": "this is a post the fourth one",
-    "post_id": 19
+    "title": "post number 2",
+    "description": "this is now the second post",
+    "post_id": 2
 }
 
 ###
 POST http://localhost:8008/posts/comment/
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.YmlsbEBnbWFpbC5jb20.zAKrxkilSaW8ZjtLNP0w89S1Kv_AbF6zeIwW9pGr6UY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.d2lsbGlhbUBnbWFpbC5jb20.VMw5SIK60WjDP2Ta74D9syCL22YSP-L80KbV-6JdXNE
 Content-Type: application/json
 
 {
     "content": "comment on post 4 by billyuan",
-    "post_id": 19
+    "post_id": 1
 }
 
 

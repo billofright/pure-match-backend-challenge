@@ -1,22 +1,29 @@
-const Pool = require('pg').Pool;
-
-const pool = new Pool({
+const { Sequelize } = require('sequelize');
+const sequelize = new Sequelize('challengedb', 'postgres', 'rootUser', {
     host: 'localhost',
-    user: 'postgres',
-    port: 5432,
-    password: 'rootUser',
-    database: 'challengedb'
+    dialect: 'postgres'
 });
 
-// client.connect();
+const testDbConnection = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('connection success');
+    } catch (error) {
+        console.error('unable to connect', error);
+    }
+}
 
-// client.query(`SELECT * FROM users`, (err, res) => {
-//     if(!err){
-//         console.log(res.rows);
-//     } else{
-//         console.log(err.message);
-//     }
-//     client.end;
+
+module.exports = { sequelize: sequelize, testDbConnection };
+
+// const Pool = require('pg').Pool;
+
+// const pool = new Pool({
+//     host: 'localhost',
+//     user: 'postgres',
+//     port: 5432,
+//     password: 'rootUser',
+//     database: 'challengedb'
 // });
 
-module.exports = pool;
+// module.exports = pool;

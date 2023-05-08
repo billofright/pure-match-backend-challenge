@@ -1,17 +1,17 @@
 const { check } = require('express-validator');
-const db = require('../database');
-
+const { sequelize, users } = require('../models');
 const email = check('email').isEmail().withMessage('Invalid email.');
 
 const emailExists = check('email').custom(async (value) => {
-    const { rows } = await db.query(
-        'SELECT * FROM users WHERE email = $1', 
-        [value]
-    );
+    const { count, rows } = await users.findAndCountAll({
+        where: {
+          email: value
+        }
+      });
 
-    if(rows.length){
+      if(count) {
         throw new Error('Email already exists.');
-    }
+      }
 });
 
 module.exports = {
